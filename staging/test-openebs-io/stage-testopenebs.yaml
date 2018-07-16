@@ -1,0 +1,32 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: stage-test-openebs
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app : stage-test-openebs
+    spec:
+      containers:
+        - name: stage-test-openebs
+          image: openebs/test-openebs-io:dd9674
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: stage-test-openebs
+  name: stage-test-openebs-service
+spec:
+  type: NodePort
+  ports:
+  - name: stage-test-openebs
+    port: 80
+    protocol: TCP
+  selector:
+    app: stage-test-openebs
