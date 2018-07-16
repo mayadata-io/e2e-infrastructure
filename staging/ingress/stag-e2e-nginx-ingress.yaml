@@ -1,0 +1,53 @@
+---
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  annotations:
+    #kubernetes.io/ingress.provider: nginx
+    kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/tls-acme: "true"
+    ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers X-Frame-Options SAMEORIGIN;
+  name: e2e-nginx-ingress
+spec:
+  tls:
+  - hosts:
+    - test.openebs.io
+    - e2e-jenkins.openebs.io
+    - e2e-logs.openebs.io
+    secretName: e2e-lego-secret-ingress
+  rules:
+  - host: test.openebs.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: stage-test-openebs-service
+          servicePort: 80
+      - path: /echo/
+        backend:
+          serviceName: echoheaders
+          servicePort: 80
+  - host: e2e-jenkins.openebs.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: echoheaders
+          servicePort: 80
+      - path: /echo/
+        backend:
+          serviceName: echoheaders
+          servicePort: 80
+  - host: e2e-logs.openebs.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: echoheaders
+          servicePort: 80
+      - path: /echo/
+        backend:
+          serviceName: echoheaders
+          servicePort: 80
