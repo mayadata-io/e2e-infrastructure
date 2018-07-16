@@ -35,7 +35,7 @@ spec:
       - path: /
         backend:
           serviceName: jenkins
-          servicePort: 80
+          servicePort: 8080
       - path: /echo/
         backend:
           serviceName: echoheaders
