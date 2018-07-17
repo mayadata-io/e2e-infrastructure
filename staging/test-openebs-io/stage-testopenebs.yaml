@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: stage-test-openebs
-          image: openebs/test-openebs-io:c752e6
+          image: openebs/test-openebs-io:d03fe0
           imagePullPolicy: Always
           ports:
           - containerPort: 80
