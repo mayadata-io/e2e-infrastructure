@@ -19,6 +19,9 @@
     suite_id: 21
 
   tasks:
+    - name: Create ssh public key
+      shell: mkdir -p ~/.ssh && ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa 
+
     - name: Creting aws bucket
       shell: aws s3api create-bucket --bucket {{ build_number }}-openebs-e2e --region {{ region }} --create-bucket-configuration LocationConstraint={{ region }} > ~/e2e/AWS/cases/{{ case_id }}/logs
        
