@@ -47,7 +47,6 @@ def get_json_file_data(path):
     except ValueError as e:
         print("JSON operation failed, Error: %s" % e)
         return None, -1
-
     return data, 1
 
 
@@ -64,7 +63,7 @@ def get_file_data(path):
 
 
 def update_github_issue_comment(args, case, logs):
-    API_ENDPOINT = 'https://api.github.com/repos/ashishranjan738/%s/issues/%s/comments' % (case['reponame'], case['issue_number'])
+    # API_ENDPOINT = 'https://api.github.com/repos/ashishranjan738/%s/issues/%s/comments' % (case['reponame'], case['issue_number'])
     # github_token = args['github_token']
     # headers = {'Authorization': 'token %s' % github_token}
     # data = { 'body': '%s' % logs }
@@ -114,7 +113,8 @@ def update_testrail_with_status(args):
                                           }
                                           )
 
-                logs, err = get_file_data(args['workspace_path'] + "/cases/" + str(case['case_id']) + '/logs')
+            logs, err = get_file_data(args['workspace_path'] + "/cases/" + str(case['case_id']) + '/logs')
+            print("------------------------"+str(logs)+"----------------------------")
             if err != -1:
                 update_github_issue_comment(args, case, logs)
             print('Successfully updated case_id - %s' % case['case_id'])
