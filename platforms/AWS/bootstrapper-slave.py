@@ -115,10 +115,11 @@ def create_case_resources(args, create_case_resources_args):
     testrail_client = get_testrail_client(args, plan)
     get_cases_args = {'suite_id': create_case_resources_args['suite_id'], 'project_id': plan['Testrail_project_id']}
     cases = get_cases(get_cases_args, testrail_client)
-    case_result, master_playbook_result = {}, []
+    master_playbook_result = []
     # Iterating over cases
     res=[]
     for case in cases:
+        case_result={}
 
         if len(case['refs'].split(',')) != 3:
             print("Case Id: %s's refs not in correct format" % str(case['id']))
