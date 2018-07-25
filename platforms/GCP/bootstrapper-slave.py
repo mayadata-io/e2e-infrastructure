@@ -119,6 +119,7 @@ def create_case_resources(args, create_case_resources_args):
     # Iterating over cases
     res=[]
     for case in cases:
+
         case_result={}
 
         if len(case['refs'].split(',')) != 3:
