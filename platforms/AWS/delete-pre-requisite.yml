@@ -1,0 +1,74 @@
+# delete-pre-requisite.yml
+# Description:  Deleting pre requisite will delete VPC, Subnet and Internet Gateway
+
+###############################################################################################
+#Test Steps:
+
+#1. Disassociating route table fro aws.
+#2. Delete route table from aws.
+#3. Detach internet gateway from aws.
+#4. Delete internet gateway from aws.
+#4. Deleting the subnet from aws.
+#5. Deleting the VPC Network form aws.
+#6. Deleting temporary file which store the VpcId and SubnetId
+
+###############################################################################################
+
+---
+
+- hosts: localhost
+
+  vars:
+    association_id: "{{ lookup('lines', 'grep association_id /tmp/aws_cluster/tmp.csv | cut -d, -f5 | cut -d: -f2') }}"
+    route_table_id: "{{ lookup('lines', 'grep route_table_id /tmp/aws_cluster/tmp.csv | cut -d, -f4 | cut -d: -f2') }}"
+    gateway_id: "{{ lookup('lines', 'grep gateway_id /tmp/aws_cluster/tmp.csv | cut -d, -f3 | cut -d: -f2') }}"
+    subnet_id: "{{ lookup('lines', 'grep subnet /tmp/aws_cluster/tmp.csv | cut -d, -f2 | cut -d: -f2') }}"
+    vpc_id: "{{ lookup('lines', 'grep vpc /tmp/aws_cluster/tmp.csv | cut -d, -f1 | cut -d: -f2') }}"
+    
+    case_id: 14
+    suite_id: 21
+    build_number: "{{ build_number }}"
+
+  tasks:
+  - name: store log
+    shell: aws ec2 describe-vpcs > ~/e2e/AWS/cases/{{ case_id }}/logs
+
+  - name: Disassociating route table
+    shell: aws ec2 disassociate-route-table --association-id {{ association_id }}
+
+  - name: Deleting route table
+    shell: aws ec2 delete-route-table --route-table-id {{ route_table_id }}
+
+  - name: Detaching internet gateway
+    shell: aws ec2 detach-internet-gateway --internet-gateway-id {{ gateway_id }} --vpc-id {{ vpc_id }}
+
+  - name: Deleting Internet gateway
+    shell: aws ec2 delete-internet-gateway --internet-gateway-id {{ gateway_id }}
+
+  - name: Deleting subnet
+    shell: aws ec2 delete-subnet --subnet-id {{ subnet_id }}
+
+  - name: Deleting VPC
+    shell: aws ec2 delete-vpc --vpc-id {{ vpc_id }}
+
+  - name: Deleting tmporary file
+    shell: rm /tmp/aws_cluster/tmp.csv
+
+  - block:
+      - name: Test Passed
+        set_fact:
+          status: "Test Passed"
+          flag: 1
+
+    rescue:
+      - name: Test Failed
+        set_fact:
+          status: "Test Failed"
+          flag: 5
+
+  - name: Create a json file for store case status
+    lineinfile:
+      create: yes
+      state: present
+      path: "~/e2e/AWS/cases/{{ case_id }}/result.json"
+      line: '{ "case_id" : {{ case_id | to_json }}, "suite_id" : {{ suite_id | to_json }}, "result" : {{ status | to_json }}, "status_id" : {{ flag | to_json }} }'
