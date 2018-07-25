@@ -10,8 +10,8 @@ import yaml
 ACCESS_RIGHT = 0o755
 
 
-def create_init_directory(args, plan):
-    path = args['base_path'] + "/" + plan['Platform_name']
+def create_init_directory(plan):
+    path = os.path.expanduser('~') + "/" + plan['Platform_name']
     return create_directory(path)
 
 
@@ -213,7 +213,7 @@ def driver(args):
     if err == -1:
         return err
     print("Setting up " + plan['Platform_name'])
-    workspace_path, err = create_init_directory(args, plan)
+    workspace_path, err = create_init_directory(plan)
     if err == -1:
         return err
     args['workspace_path'] = workspace_path
