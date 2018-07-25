@@ -81,8 +81,8 @@ def parse_yml(filename):
 
 
 def get_base_path():
-    # path = str(os.environ['WORKSPACE'])
-    path = os.path.expanduser('~')+"/e2e"
+    path = str(os.environ['WORKSPACE'])
+    # path = os.path.expanduser('~')+"/e2e"
     if len(path) == 0:
         return "", -1
     return path, 0

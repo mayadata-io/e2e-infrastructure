@@ -1,8 +1,5 @@
 import argparse
 import github
-import datetime
-import requests
-import sys
 import json
 import yaml
 import os
@@ -23,6 +20,7 @@ def github_authentication(args):
     github_password = args['github_password']
     github_auth = github.Github(github_username, github_password)
     return github_auth
+
 
 def get_yaml_file_data(path):
     try:
@@ -67,14 +65,17 @@ def get_file_data(path):
 
 
 def update_github_issue_comment(args, case, logs):
-    API_ENDPOINT = 'https://api.github.com/repos/ashishranjan738/%s/issues/%s/comments' % (case['reponame'], case['issue_number'])
+    API_ENDPOINT = 'https://api.github.com/repos/ashishranjan738/%s/issues/%s/comments' % (
+    case['reponame'], case['issue_number'])
     # github_token = args['github_token']
     # headers = {'Authorization': 'token %s' % github_token}
     # data = { 'body': '%s' % logs }
     # r = requests.post(url = API_ENDPOINT, data = json.dumps(data), headers = headers)
 
     github_client = github_authentication(args)
-    print(github_client.get_user().get_repo(case['reponame']).get_issue(int(case['issue_number'])).create_comment(str(logs)))
+    print(github_client.get_user().get_repo(case['reponame']).get_issue(int(case['issue_number'])).create_comment(
+        str(logs)))
+
 
 def check_error(err):
     if err == -1:
@@ -82,7 +83,7 @@ def check_error(err):
 
 
 def get_workspace_path():
-    path = os.path.expanduser('~') + "/e2e/AWS"
+    path = os.path.expanduser('~') + "/e2e/GCP"
     return path
 
 
@@ -91,8 +92,8 @@ def update_testrail_with_status(args):
     # test_plans, err = get_yaml_file_data(path + '/GCP.yml')
     # check_error(err)
 
-    suites, err = get_json_file_data(args['workspace_path']+'/mapping.json')
-    if err==-1:
+    suites, err = get_json_file_data(args['workspace_path'] + '/mapping.json')
+    if err == -1:
         return err
 
     # print(suites)
@@ -103,27 +104,25 @@ def update_testrail_with_status(args):
         for case in suite_cases:
             result, err = get_json_file_data(
                 args['workspace_path'] + "/cases/" + str(case['case_id']) + '/result.json')
-            if err == -1:
-                return err
+            if err != -1:
+                status_id = result['status_id']
 
-            status_id = result['status_id']
+                testrail_client.send_post('add_results_for_cases/' + str(suite_run_id),
+                                          {
+                                              'results': [
+                                                  {
+                                                      'case_id': case['case_id'],
+                                                      'status_id': str(status_id)
+                                                  }
+                                              ]
+                                          }
+                                          )
 
-            testrail_client.send_post('add_results_for_cases/' + str(suite_run_id),
-                                      {
-                                          'results': [
-                                              {
-                                                  'case_id': case['case_id'],
-                                                  'status_id': str(status_id)
-                                              }
-                                          ]
-                                      }
-                                      )
-
-            logs, err = get_file_data(args['workspace_path'] + "/cases/" + str(case['case_id']) + '/logs')
-            if err == -1:
-                return err
-            update_github_issue_comment(args, case, logs)
+                logs, err = get_file_data(args['workspace_path'] + "/cases/" + str(case['case_id']) + '/logs')
+            if err != -1:
+                update_github_issue_comment(args, case, logs)
             print('Successfully updated case_id - %s' % case['case_id'])
+
 
 def main():
     parser = argparse.ArgumentParser(description='cli to get required details')
