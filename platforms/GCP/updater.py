@@ -4,6 +4,7 @@ import json
 import yaml
 import os
 import testrail
+# import requests
 
 
 def get_testrail_client(args):
@@ -20,6 +21,7 @@ def github_authentication(args):
     github_password = args['github_password']
     github_auth = github.Github(github_username, github_password)
     return github_auth
+
 
 def get_yaml_file_data(path):
     try:
@@ -52,6 +54,7 @@ def get_json_file_data(path):
 
 def get_file_data(path):
     try:
+        print("8888888888888PATH:", path)
         file = open(path, 'r')
         data = file.read()
         file.close()
@@ -114,8 +117,9 @@ def update_testrail_with_status(args):
                                           )
 
             logs, err = get_file_data(args['workspace_path'] + "/cases/" + str(case['case_id']) + '/logs')
-            print("------------------------"+str(logs)+"----------------------------")
-            if err != -1:
+            print("------------------------>"+str(logs)+"<----------------------------")
+            logs = logs+"Logs comming soon"
+            if err != -1 :
                 update_github_issue_comment(args, case, logs)
             print('Successfully updated case_id - %s' % case['case_id'])
 
