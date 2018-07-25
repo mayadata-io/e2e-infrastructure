@@ -115,9 +115,12 @@ def create_case_resources(args, create_case_resources_args):
     testrail_client = get_testrail_client(args, plan)
     get_cases_args = {'suite_id': create_case_resources_args['suite_id'], 'project_id': plan['Testrail_project_id']}
     cases = get_cases(get_cases_args, testrail_client)
-    case_result, master_playbook_result = {}, []
+    master_playbook_result = []
     # Iterating over cases
+    res=[]
     for case in cases:
+        case_result={}
+
         if len(case['refs'].split(',')) != 3:
             print("Case Id: %s's refs not in correct format" % str(case['id']))
             return {}, [], -1
@@ -139,8 +142,8 @@ def create_case_resources(args, create_case_resources_args):
 
         # Linking local yml to master yml
         master_playbook_result.append({'include': "cases/" + str(case['id']) + '/playbook.yml'})
-
-    return case_result, master_playbook_result, 0
+        res.append(case_result)
+    return res, master_playbook_result, 0
 
 
 def create_suite_resources(args, create_suite_resources_args):
@@ -161,16 +164,15 @@ def create_suite_resources(args, create_suite_resources_args):
                 return {}, -1
 
             # Mapping suite_id with run_id
-            map_src_id[tmp_suite['suite_id']] = {'run_id': tmp_suite['runs'][0]['id'], 'cases': []}
+
+            map_src_id[tmp_suite['suite_id']] = {'run_id': tmp_suite['runs'][0]['id'], 'cases':[]}
             create_case_resources_args = {'plan': plan, 'suite_id': int(suite_name)}
-            cases_result, case_master_playbook_yaml, err = create_case_resources(args, create_case_resources_args)
+            res, case_master_playbook_yaml, err = create_case_resources(args, create_case_resources_args)
             if err == -1:
                 return {}, [], err
 
             # Adding information to maps
-            map_src_id[tmp_suite['suite_id']]['cases'].append(
-                {'case_id': cases_result['case_id'], 'url': cases_result['url'], 'reponame': cases_result['reponame'],
-                 'issue_number': cases_result['issue_number']})
+            map_src_id[tmp_suite['suite_id']]['cases']=res
 
             master_playbook_yaml = master_playbook_yaml + case_master_playbook_yaml
 
