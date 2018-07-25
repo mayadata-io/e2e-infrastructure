@@ -17,7 +17,7 @@
                    shell: gcloud compute routes delete $(gcloud compute routes list --filter="name:openebs AND network:openebs-e2e"  --format="get(name)") -q || gcloud compute --project=openebs-ci networks delete openebs-e2e -q >> ~/e2e/GCP/cases/{{ delete_vpc_case_id }}/logs
                rescue:
                  - name: Only VPC
-                   shell: gcloud compute --project=openebs-ci networks delete openebs-e2e -q >> ~/e2e/GCP/cases/{{ delete_vpc_case_id }}/>> ~/e2e/GCP/cases/{{ delete_vpc_case_id }}/logs
+                   shell: gcloud compute --project=openebs-ci networks delete openebs-e2e -q >> ~/e2e/GCP/cases/{{ delete_vpc_case_id }}/logs
              - name: Test Passed
                set_fact:
                  flag: "Test Passed"
