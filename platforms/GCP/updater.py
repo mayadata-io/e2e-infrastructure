@@ -54,7 +54,7 @@ def get_json_file_data(path):
 
 def get_file_data(path):
     try:
-        print("8888888888888PATH:", path)
+        print("PATH:", path)
         file = open(path, 'r')
         data = file.read()
         file.close()
@@ -91,6 +91,8 @@ def update_testrail_with_status(args):
     # check_error(err)
 
     suites, err = get_json_file_data(args['workspace_path']+'/mapping.json')
+
+    print("suites++++++++++++++++++", suites)
     if err==-1:
         return err
 
@@ -98,7 +100,7 @@ def update_testrail_with_status(args):
     for suite_id, suite_value in suites.items():
         suite_cases = suite_value['cases']
         suite_run_id = suite_value['run_id']
-
+        print(suite_cases)
         for case in suite_cases:
             result, err = get_json_file_data(
                 args['workspace_path'] + "/cases/" + str(case['case_id']) + '/result.json')
@@ -122,6 +124,7 @@ def update_testrail_with_status(args):
             if err != -1 :
                 update_github_issue_comment(args, case, logs)
             print('Successfully updated case_id - %s' % case['case_id'])
+
 
 def main():
     parser = argparse.ArgumentParser(description='cli to get required details')
