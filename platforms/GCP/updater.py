@@ -4,6 +4,7 @@ import json
 import yaml
 import os
 import testrail
+# import requests
 
 
 def get_testrail_client(args):
@@ -20,6 +21,7 @@ def github_authentication(args):
     github_password = args['github_password']
     github_auth = github.Github(github_username, github_password)
     return github_auth
+
 
 def get_yaml_file_data(path):
     try:
@@ -52,6 +54,7 @@ def get_json_file_data(path):
 
 def get_file_data(path):
     try:
+        print("PATH:", path)
         file = open(path, 'r')
         data = file.read()
         file.close()
@@ -88,6 +91,8 @@ def update_testrail_with_status(args):
     # check_error(err)
 
     suites, err = get_json_file_data(args['workspace_path']+'/mapping.json')
+
+    print("suites++++++++++++++++++", suites)
     if err==-1:
         return err
 
@@ -95,7 +100,7 @@ def update_testrail_with_status(args):
     for suite_id, suite_value in suites.items():
         suite_cases = suite_value['cases']
         suite_run_id = suite_value['run_id']
-
+        print(suite_cases)
         for case in suite_cases:
             result, err = get_json_file_data(
                 args['workspace_path'] + "/cases/" + str(case['case_id']) + '/result.json')
@@ -114,10 +119,12 @@ def update_testrail_with_status(args):
                                           )
 
             logs, err = get_file_data(args['workspace_path'] + "/cases/" + str(case['case_id']) + '/logs')
-            print("------------------------"+str(logs)+"----------------------------")
-            if err != -1:
+            print("------------------------>"+str(logs)+"<----------------------------")
+            logs = logs+"Logs comming soon"
+            if err != -1 :
                 update_github_issue_comment(args, case, logs)
             print('Successfully updated case_id - %s' % case['case_id'])
+
 
 def main():
     parser = argparse.ArgumentParser(description='cli to get required details')
