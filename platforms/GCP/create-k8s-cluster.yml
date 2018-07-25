@@ -1,0 +1,55 @@
+# Description:  Generates a random name, & creates a bucket, InstanceGroup object and Initializes 
+# VMs running Kubernetes, in accordance to the node_count specified using kops in Google Cloud 
+# Author: Harshvardhan Karn
+###############################################################################################
+#Steps:
+#1. Generate a random 6 digit string using Python script
+#2. Create a bucket with the generated random Name
+#3. Create the Clusters, InstanceGroup objects and state store in bucket
+#4. Create the k8s Cluster, using VM instances.
+#5. Log a file with the name of Cluster inside /temp/run_id/gcp_cluster
+###############################################################################################
+
+---
+- hosts: localhost
+  vars_files:
+    - gcp-vars.yml
+  tasks:
+       - block:
+             - name: Generating Random Cluster Name
+               shell: python random_name.py
+               register: cluster_name
+      
+             - name: Creating Bucket
+               shell: gsutil mb gs://{{cluster_name.stdout}}/ >> ~/e2e/GCP/cases/{{ create_cluster_case_id }}/logs
+      
+             - name: Creating the Cluster & InstanceGroup objects in our state store
+               shell: export KOPS_FEATURE_FLAGS=AlphaAllowGCE && kops create cluster {{cluster_name.stdout}}.k8s.local --zones us-central1-a --state gs://{{cluster_name.stdout}}/ --project={{PROJECT}} --node-count {{NODES}} --image "ubuntu-os-cloud/ubuntu-1604-xenial-v20170202" --vpc=openebs-e2e >> ~/e2e/GCP/cases/{{ create_cluster_case_id }}/logs
+      
+             - name: Creating K8s Cluster
+               shell: export KOPS_FEATURE_FLAGS=AlphaAllowGCE && kops update cluster {{cluster_name.stdout}}.k8s.local --state gs://{{cluster_name.stdout}}/ --yes >> ~/e2e/GCP/cases/{{ create_cluster_case_id }}/logs
+      
+             - name: Logging Cluster Name inside
+               shell: mkdir -p ~/e2e/GCP/cases/{{ create_cluster_case_id }}/ && touch ~/e2e/GCP/cases/{{ create_cluster_case_id }}/clusters
+               
+             - lineinfile: 
+                 create: yes
+                 state: present
+                 path: '~/e2e/GCP/cases/{{ create_cluster_case_id }}/clusters'
+                 line: '{{ cluster_name.stdout }}'
+             - name: Test Passed
+               set_fact:
+                 flag: "Test Passed"
+                 status_id: 1
+         rescue:
+             - name: Test Failed
+               set_fact:
+                 flag: "Test Failed"
+                 status_id: 5
+       - lineinfile:
+           create: yes
+           state: present
+           path: '~/e2e/GCP/cases/{{ create_cluster_case_id }}/result.json'
+           line: '{ "name" : "Create-cluster", "case_id" : {{ create_cluster_case_id | to_json }}, "suite_id" : {{ gcp_test_suite_id | to_json }}, "status" : {{ flag | to_json }}, "status_id" : {{ status_id | to_json }} }'
+           
+
