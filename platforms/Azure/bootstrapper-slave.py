@@ -11,7 +11,7 @@ ACCESS_RIGHT = 0o755
 
 
 def create_init_directory(plan):
-    path = os.path.expanduser('~') + "/" + plan['Platform_name']+"/e2e"
+    path = os.path.expanduser('~') + "/e2e/" + plan['Platform_name']
     return create_directory(path)
 
 
