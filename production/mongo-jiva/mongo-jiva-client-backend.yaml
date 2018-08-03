@@ -89,7 +89,7 @@ spec:
         - containerPort: 3000
         args:
         - "mongodb://mongodb://mongo-0.mongo-jiva"
-        image: openebs/mongo-jiva-backend:1776f0b
+        image: mayadata/www-mongo-jiva-test-backend:master-71d6b75
         imagePullPolicy: Always
 ---
 apiVersion: v1
@@ -122,7 +122,7 @@ spec:
     spec:
       containers:
         - name: mongo-jiva-client-container
-          image: openebs/www-mongo-jiva-client:ghgh89
+          image: mayadata/www-mongo-jiva-test-openebs:7ef354
           imagePullPolicy: Always
           ports:
           - containerPort: 80
