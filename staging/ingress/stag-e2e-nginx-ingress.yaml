@@ -16,6 +16,7 @@ spec:
     - test.openebs.io
     - e2e-jenkins.openebs.io
     - e2e-logs.openebs.io
+    - mongojiva.test.openebs.io
     secretName: e2e-lego-secret-ingress
   rules:
   - host: test.openebs.io
@@ -51,3 +52,18 @@ spec:
         backend:
           serviceName: echoheaders
           servicePort: 80
+  - host: mongojiva.test.openebs.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: mongo-jiva-client-service
+          servicePort: 80
+      - path: /echo/
+        backend:
+          serviceName: echoheaders
+          servicePort: 80
+      - path: /api/
+        backend:
+          serviceName: mongo-jiva-backend-service
+          servicePort: 3000                     

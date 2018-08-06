@@ -1,0 +1,20 @@
+# Define a storage classes supported by OpenEBS
+apiVersion: openebs.io/v1alpha1
+kind: StoragePool
+metadata:
+    name: jivagpd10g
+    type: hostdir
+spec:
+    path: "/mnt/mongo"
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+   name: openebsmongogpd
+provisioner: openebs.io/provisioner-iscsi
+parameters:
+  openebs.io/storage-pool: "jivagpd10g"
+  openebs.io/jiva-replica-count: "1"
+  openebs.io/volume-monitor: "true"
+  openebs.io/capacity: 10G
+  openebs.io/fstype: "xfs"
