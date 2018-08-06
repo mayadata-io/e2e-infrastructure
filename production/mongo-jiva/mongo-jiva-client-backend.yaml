@@ -1,7 +1,7 @@
 # Define a namespace for mongo jiva 
 apiVersion: apps/v1beta1
 kind: Namespce
-metadata
+metadata:
    name: mongo-jiva
 ---
 # Define OpenEBS/jiva mongo service and StatefulSet.
@@ -35,8 +35,6 @@ spec:
        environment: test
    spec:
      terminationGracePeriodSeconds: 10
-     nodeSelector:
-        name: mongogpd 
      containers:
        - name: mongo
          image: mongo
@@ -88,7 +86,7 @@ spec:
         ports:
         - containerPort: 3000
         args:
-        - "mongodb://mongodb://mongo-0.mongo-jiva"
+        - "mongodb://mongo.mongo-jiva.svc.cluster.local"
         image: mayadata/www-mongo-jiva-test-backend:master-71d6b75
         imagePullPolicy: Always
 ---
