@@ -20,7 +20,7 @@ metadata:
  name: mongo
  namespace: mongo-jiva
 spec:
- serviceName: "mongo"
+ serviceName: mongo
  replicas: 2
  template:
    metadata:
