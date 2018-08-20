@@ -1,0 +1,26 @@
+#!/bin/bash
+# git commit corn#
+
+ set -e
+
+git clone https://github.com/openebs/e2e-infrastructure.git
+ 
+cd e2e-infrastructure
+
+git config --global user.email "atulabhi@gmail.com"
+git config --global user.name "atulabhi"
+
+wget https://raw.githubusercontent.com/harshvkarn/tools/master/commit-writer/write-commit.yml
+ansible-playbook write-commit.yml --extra-vars "repo=$CI_PROJECT_NAME commit=ci"
+
+git add .
+
+git commit -m "update baseline-image"
+
+git push  https://$user:$pass@github.com/openebs/e2e-infrastructure.git --all
+
+cd ..
+
+chmod u+x e2e-infrastructure
+
+rm -rf e2e-infrastructure 
