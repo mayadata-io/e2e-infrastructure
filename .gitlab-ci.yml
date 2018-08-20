@@ -22,16 +22,8 @@ baseline-image:
     - wget https://raw.githubusercontent.com/harshvkarn/tools/master/commit-writer/write-commit.yml
     - ansible-playbook write-commit.yml --extra-vars "repo=$CI_PROJECT_NAME commit=ci"
     - ls
-    - curl -X POST \
-      -F token=b44b8e26ce8ef4dc272679d007cad \
-      -F ref=master \
-      https://gitlab.openebs.ci/api/v4/projects/7/trigger/pipeline
-    - curl -X POST \
-      -F token=3ac51c4e64d286c1ed45f23ad72a2c \
-      -F ref=master \
-      https://gitlab.openebs.ci/api/v4/projects/9/trigger/pipeline
-
-
+    - curl -X POST -F token=db44b8e26ce8ef4dc272679d007cad -F ref=master https://gitlab.openebs.ci/api/v4/projects/7/trigger/pipeline
+    - curl -X POST -F token=3ac51c4e64d286c1ed45f23ad72a2c -F ref=master https://gitlab.openebs.ci/api/v4/projects/9/trigger/pipeline
 
   #  - git add .
   #  - git commit -m "updated baseline jiva"
