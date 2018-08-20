@@ -19,7 +19,7 @@ baseline-image:
   image: atulabhi/kops:v8
   script:
     - pwd
-    - https://raw.githubusercontent.com/harshvkarn/tools/master/commit-writer/write-commit.yml
+    - wget https://raw.githubusercontent.com/harshvkarn/tools/master/commit-writer/write-commit.yml
     - ansible-playbook write-commit.yml --extra-vars "repo=$CI_PROJECT_NAME commit=ci"
     - ls
     - curl -X POST \
