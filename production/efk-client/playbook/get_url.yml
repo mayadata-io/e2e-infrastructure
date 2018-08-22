@@ -1,0 +1,10 @@
+- name: Download files
+  get_url:
+    url: "{{ url }}"
+    dest: "{{ dest }}"
+    force: yes
+  register: result
+  until:  "'OK' in result.msg"
+  delay: 5
+  retries: 3
+

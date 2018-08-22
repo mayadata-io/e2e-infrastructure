@@ -1,0 +1,33 @@
+aggregator_configmap_link: https://raw.githubusercontent.com/openebs/e2e-infrastructure/master/production/efk-client/fluentd/aggregator/aggregator-client-config.yaml
+
+agg_cnfg_yaml_alias: aggregator-client-config.yaml
+
+aggregator_deployment_link: https://raw.githubusercontent.com/openebs/e2e-infrastructure/master/production/efk-client/fluentd/aggregator/aggregator-client-deployment.yaml
+
+agg_dpl_yaml_alias: aggregator-client-deployment.yaml
+
+aggregator_services_link: https://raw.githubusercontent.com/openebs/e2e-infrastructure/master/production/efk-client/fluentd/aggregator/aggregator-client-svc.yaml
+
+agg_svc_yaml_alias: aggregator-client-svc.yaml
+
+forwarder_configmap_link: https://raw.githubusercontent.com/openebs/e2e-infrastructure/master/production/efk-client/fluentd/forwarder/forwarder-client-config.yaml
+
+fwd_cnfg_yaml_alias: forwarder-client-config.yaml
+
+forwarder_daemonset_link: https://raw.githubusercontent.com/openebs/e2e-infrastructure/master/production/efk-client/fluentd/forwarder/forwarder-client-ds.yaml
+
+fwd_dmn_yaml_alias: forwarder-client-ds.yaml
+
+namespace: logging
+
+commit_id: "{{ commit_id }}"
+
+pipeline_id: "{{ pipeline_id }}"
+
+test_artifacts:
+  - aggregator-client-config.yaml
+  - aggregator-client-deployment.yaml
+  - aggregator-client-svc.yaml
+  - forwarder-client-config.yaml
+  - forwarder-client-ds.yaml
+
