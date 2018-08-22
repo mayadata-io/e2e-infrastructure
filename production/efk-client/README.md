@@ -1,0 +1,1 @@
+This folder contains the yaml files for fluentd forwarder and aggregator that runs on cluster.Forwarder collects logs form the cluster and sends to aggregator. Aggregator then send the logs to elasticsearch running on main cluster.
