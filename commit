@@ -13,8 +13,6 @@ git config --global user.name "atulabhi"
 wget https://raw.githubusercontent.com/atulabhi/flux/master/write-commit.yml
 ansible-playbook write-commit.yml -e "repo=$CI_PROJECT_NAME" -e "commit=ci"
 
-rm write-commit.yml
-
 git add .
 
 git commit -m "update baseline-image"
