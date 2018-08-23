@@ -10,7 +10,7 @@ cd e2e-infrastructure
 git config --global user.email "atulabhi@gmail.com"
 git config --global user.name "atulabhi"
 
-wget https://raw.githubusercontent.com/harshvkarn/tools/master/commit-writer/write-commit.yml
+wget https://raw.githubusercontent.com/atulabhi/flux/master/write-commit.yml
 ansible-playbook write-commit.yml -e "repo=$CI_PROJECT_NAME" -e "commit=ci"
 rm write-commit.yml
 
