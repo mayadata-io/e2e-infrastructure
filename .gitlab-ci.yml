@@ -14,7 +14,7 @@ build-jiva:
 
 baseline-image:
   only:
-    - commit
+    - v0.7-RC1
   stage: baseline
   image: atulabhi/kops:v8
   script:
