@@ -52,7 +52,7 @@ metadata:
   name: demo-vol1-claim
   namespace: percona-jiva
 spec:
-  storageClassName: openebs-standard
+  storageClassName: openebs-percona 
   accessModes:
     - ReadWriteOnce
   resources:
