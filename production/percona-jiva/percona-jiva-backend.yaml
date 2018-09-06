@@ -1,0 +1,40 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: percona-jiva-backend
+  namespace: percona-jiva
+spec:
+  selector:
+    matchLabels:
+      app: percona-jiva-backend
+  template:
+    metadata:
+      labels:
+        app: percona-jiva-backend
+    spec:
+      containers:
+      - name: percona-jiva-backend-container
+        ports:
+        - containerPort: 3000
+        args:
+        - "percona-mysql"
+        - "k8sDem0"
+        - "percona-jiva"
+        - "maya-apiserver-service.openebs"
+        image: inyee/percona-mysql:master-df0b38e
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: percona-jiva
+  labels:
+    app: percona-jiva-backend
+  name: percona-jiva-backend-service
+spec:
+  ports:
+  - name: percona-jiva-backend
+    port: 3000
+    protocol: TCP
+  selector:
+    app: percona-jiva-backend
