@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  vars:
+    - filename: "{{repo}}{{commit}}"
+  tasks:
+    - name: Create filename
+      file: 
+        path: "{{filename}}"
+        state: touch
+
+    - name: Write to file baseline_image
+      lineinfile:
+        path: "{{filename}}"
+        # create: yes
+        # state: present
+        line:  'maya 2b96ac cstor ac661b'
