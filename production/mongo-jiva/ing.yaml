@@ -5,21 +5,21 @@ metadata:
  namespace: percona-jiva
  annotations:
    nginx.ingress.kubernetes.io/rewrite-target: /
-   # kubernetes.io/tls-acme: "true"
+   kubernetes.io/tls-acme: "true"
 spec:
-  #tls:
-  #- hosts:
-  #  - perconajiva.openebs.ci
-  #  secretName: percona-jiva-ingress
-  rules:
-  - host: perconajiva.openebs.ci
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: moperconango-jiva-client-service
-          servicePort: 80
-      - path: /api/
-        backend:
-          serviceName: percona-jiva-backend-service
-          servicePort: 300
+ tls:
+ - hosts:
+   - perconajiva.openebs.ci
+   secretName: percona-jiva-ingress
+ rules:
+ - host: perconajiva.openebs.ci
+   http:
+     paths:
+     - path: /
+       backend:
+         serviceName: moperconango-jiva-client-service
+         servicePort: 80
+     - path: /api/
+       backend:
+         serviceName: percona-jiva-backend-service
+         servicePort: 300

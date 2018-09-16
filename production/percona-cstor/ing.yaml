@@ -2,24 +2,24 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
  name: percona-frontend-ingress
- namespace: percona-jiva
+ namespace: percona-cstor
  annotations:
    nginx.ingress.kubernetes.io/rewrite-target: /
    kubernetes.io/tls-acme: "true"
 spec:
  tls:
  - hosts:
-   - perconajiva.openebs.ci
-   secretName: percona-jiva-ingress
+   - perconacstor.openebs.ci
+   secretName: percona-cstor-ingress
  rules:
- - host: perconajiva.openebs.ci
+ - host: perconacstor.openebs.ci
    http:
      paths:
      - path: /
        backend:
-         serviceName: percona-jiva-client-service
+         serviceName: percona-cstor-client-service
          servicePort: 80
      - path: /api/
        backend:
-         serviceName: percona-jiva-backend-service
+         serviceName: percona-cstor-backend-service
          servicePort: 3000

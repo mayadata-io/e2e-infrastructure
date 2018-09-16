@@ -12,6 +12,7 @@ spec:
       labels:
         app: mongo-jiva-backend
     spec:
+      serviceAccountName: mongo-jiva-operator
       containers:
       - name: mongo-jiva-backend-container
         ports:
