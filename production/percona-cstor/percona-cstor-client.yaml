@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: percona-cstor-client-container
-          image: inyee/workloads-dashboard:913256
+          image: inyee/workloads-cstor-dashboard:92b626
           imagePullPolicy: Always
           ports:
           - containerPort: 80

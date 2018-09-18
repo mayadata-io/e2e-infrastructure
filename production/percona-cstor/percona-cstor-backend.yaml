@@ -23,7 +23,7 @@ spec:
         - "percona-jiva"
         - "openebs"
         - "maya-apiserver-service.openebs"
-        image: inyee/percona-cstor-mysql:master-e115d71
+        image: inyee/percona-cstor-mysql-backend:master-7faac24
         imagePullPolicy: Always
 ---
 apiVersion: v1
@@ -34,6 +34,7 @@ metadata:
     app: percona-cstor-backend
   name: percona-cstor-backend-service
 spec:
+  type: NodePort
   ports:
   - name: percona-cstor-backend
     port: 3000

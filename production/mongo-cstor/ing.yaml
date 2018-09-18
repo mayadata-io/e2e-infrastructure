@@ -1,8 +1,8 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
- name: percona-frontend-ingress
- namespace: percona-cstor
+ name: mongo-frontend-ingress
+ namespace: mongo-cstor
  annotations:
   nginx.ingress.kubernetes.io/rewrite-target: /
   kubernetes.io/tls-acme: "true"
@@ -10,17 +10,17 @@ metadata:
 spec:
  tls:
  - hosts:
-   - perconacstor.openebs.ci
-   secretName: percona-cstor-ingress
+   - mongocstor.openebs.ci
+   secretName: mongo-cstor-ingress
  rules:
- - host: perconacstor.openebs.ci
+ - host: mongocstor.openebs.ci
    http:
      paths:
      - path: /
        backend:
-         serviceName: percona-cstor-client-service
+         serviceName: mongo-cstor-client-service
          servicePort: 80
      - path: /api/
        backend:
-         serviceName: percona-cstor-backend-service
+         serviceName: mongo-cstor-backend-service
          servicePort: 3000
