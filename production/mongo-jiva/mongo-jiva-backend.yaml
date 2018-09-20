@@ -19,7 +19,11 @@ spec:
         - containerPort: 3000
         args:
         - "mongodb://mongo-0.mongo"
-        image: mayadata/www-mongo-jiva-test-backend:master-71d6b75
+        - "maya"
+        - "mongo-jiva"
+        - "mongo-jiva"
+        - "maya-apiserver-service.openebs"
+        image: inyee/mongo-jiva-backend:master-e5d8dc9
         imagePullPolicy: Always
 ---
 apiVersion: v1

@@ -27,6 +27,7 @@ spec:
      labels:
        role: mongo
        environment: test
+       type: workload
    spec:
      terminationGracePeriodSeconds: 10
      containers:

@@ -20,7 +20,7 @@ spec:
         args:
         - "mongodb://mongo-0.mongo"
         - "maya"
-        - "mongo-jiva"
+        - "mongo-cstor"
         - "openebs"
         - "maya-apiserver-service.openebs"
         image: inyee/mongo-cstor-backend:master-30ffbf7

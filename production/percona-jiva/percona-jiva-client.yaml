@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: percona-jiva-client-container
-          image: inyee/workloads-dashboard:913256
+          image: inyee/workloads-dashboard:db61f6
           imagePullPolicy: Always
           ports:
           - containerPort: 80

@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: mongo-cstor-client-container
-          image: inyee/workloads-cstor-dashboard:3f98c7
+          image: inyee/workloads-cstor-dashboard:2eca3b
           imagePullPolicy: Always
           ports:
           - containerPort: 80
