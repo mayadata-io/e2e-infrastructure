@@ -1,0 +1,41 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: grafana-cstor-backend
+  namespace: grafana-cstor
+spec:
+  selector:
+    matchLabels:
+      app: grafana-cstor-backend
+  template:
+    metadata:
+      labels:
+        app: grafana-cstor-backend
+    spec:
+      serviceAccountName: grafana-cstor-operator
+      containers:
+      - name: grafana-cstor-backend-container
+        ports:
+        - containerPort: 3000
+        args:
+        - "grafana-cstor"
+        - "openebs"
+        - "maya-apiserver-service.openebs"
+        image: inyee/prometheus-cstor-backend:master-078ac41
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: grafana-cstor
+  labels:
+    app: grafana-cstor-backend
+  name: grafana-cstor-backend-service
+spec:
+  type: NodePort
+  ports:
+  - name: grafana-cstor-backend
+    port: 3000
+    protocol: TCP
+  selector:
+    app: grafana-cstor-backend
