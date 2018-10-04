@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+ name: percona-frontend-ingress
+ namespace: percona-cstor
+ annotations:
+  nginx.ingress.kubernetes.io/rewrite-target: /
+  kubernetes.io/tls-acme: "true"
+  kubernetes.io/ingress.class: "nginx"
+spec:
+ tls:
+ - hosts:
+   - perconacstor.openebs.ci
+   secretName: percona-cstor-ingress
+ rules:
+ - host: perconacstor.openebs.ci
+   http:
+     paths:
+     - path: /
+       backend:
+         serviceName: percona-cstor-client-service
+         servicePort: 80
+     - path: /api/
+       backend:
+         serviceName: percona-cstor-backend-service
+         servicePort: 3000

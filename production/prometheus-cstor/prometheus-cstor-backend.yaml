@@ -1,0 +1,41 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: prometheus-cstor-backend
+  namespace: prometheus-cstor
+spec:
+  selector:
+    matchLabels:
+      app: prometheus-cstor-backend
+  template:
+    metadata:
+      labels:
+        app: prometheus-cstor-backend
+    spec:
+      serviceAccountName: prometheus-cstor-operator
+      containers:
+      - name: prometheus-cstor-backend-container
+        ports:
+        - containerPort: 3000
+        args:
+        - "openebs"
+        - "openebs"
+        - "maya-apiserver-service.openebs"
+        image: inyee/prometheus-cstor-backend:master-078ac41
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: prometheus-cstor
+  labels:
+    app: prometheus-cstor-backend
+  name: prometheus-cstor-backend-service
+spec:
+  type: NodePort
+  ports:
+  - name: prometheus-cstor-backend
+    port: 3000
+    protocol: TCP
+  selector:
+    app: prometheus-cstor-backend

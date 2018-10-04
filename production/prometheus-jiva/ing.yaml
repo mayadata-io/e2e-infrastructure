@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+ name: prometheus-frontend-ingress
+ namespace: prometheus-jiva
+ annotations:
+  nginx.ingress.kubernetes.io/rewrite-target: /
+  kubernetes.io/tls-acme: "true"
+  kubernetes.io/ingress.class: "nginx"
+spec:
+ tls:
+ - hosts:
+   - prometheusjiva.openebs.ci
+   secretName: prometheus-jiva-ingress
+ rules:
+ - host: prometheusjiva.openebs.ci
+   http:
+     paths:
+     - path: /
+       backend:
+         serviceName: prometheus-jiva-client-service
+         servicePort: 80
+     - path: /api/
+       backend:
+         serviceName: prometheus-jiva-backend-service
+         servicePort: 3000

@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
  name: mongo
- namespace: mongo-jiva
+ namespace: mongo-cstor
  labels:
    name: mongo
 spec:
@@ -18,7 +18,7 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
  name: mongo
- namespace: mongo-jiva
+ namespace: mongo-cstor
 spec:
  serviceName: mongo
  replicas: 3
@@ -53,11 +53,11 @@ spec:
  volumeClaimTemplates:
  - metadata:
      name: mongo-persistent-storage
-     namespace: mongo-jiva
+     namespace: mongo-cstor
    spec:
-     storageClassName: openebs-mongodb
+     storageClassName: openebs-cstor-sparse
      accessModes:
        - ReadWriteOnce
      resources:
        requests:
-         storage: 5G
+         storage: 10G
