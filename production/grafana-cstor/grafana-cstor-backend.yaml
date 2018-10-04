@@ -21,7 +21,7 @@ spec:
         - "grafana-cstor"
         - "openebs"
         - "maya-apiserver-service.openebs"
-        image: inyee/prometheus-cstor-backend:master-078ac41
+        image: inyee/grafana-cstor-backend:master-3fc94ec
         imagePullPolicy: Always
 ---
 apiVersion: v1

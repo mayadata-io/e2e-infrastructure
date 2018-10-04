@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: grafana-cstor-client-container
-          image: inyee/grafana-cstor-dashboard:2eca3b
+          image: inyee/grafana-cstor-dashboard:72cf87
           imagePullPolicy: Always
           ports:
           - containerPort: 80

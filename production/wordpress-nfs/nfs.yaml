@@ -121,6 +121,9 @@ apiVersion: apps/v1
 metadata:
  name: openebs-nfs-provisioner
  namespace: wordpress-nfs
+ labels:
+  app: openebs-nfs-provisioner
+  type: workload
 spec:
  selector:
    matchLabels:
@@ -132,6 +135,7 @@ spec:
    metadata:
      labels:
        app: openebs-nfs-provisioner
+       type: workload
    spec:
      serviceAccount: openebs-nfs-provisioner
      containers:

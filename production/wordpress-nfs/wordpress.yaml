@@ -6,6 +6,7 @@ metadata:
   namespace: wordpress-nfs
   labels:
     app: wordpress
+    type: workload
 spec:
   selector:
     matchLabels:
@@ -19,6 +20,7 @@ spec:
       labels:
         app: wordpress
         tier: frontend
+        type: workload
     spec:
       containers:
       - image: wordpress:4.8-apache

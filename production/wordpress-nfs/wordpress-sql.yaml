@@ -21,6 +21,7 @@ metadata:
   namespace: wordpress-nfs
   labels:
     app: wordpress
+    type: workload
 spec:
   selector:
     matchLabels:
@@ -33,6 +34,7 @@ spec:
       labels:
         app: wordpress
         tier: mysql
+        type: workload
     spec:
       containers:
       - image: mysql:5.6
