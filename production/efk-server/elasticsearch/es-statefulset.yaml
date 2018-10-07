@@ -53,7 +53,7 @@ metadata:
     k8s-app: elasticsearch-logging
 spec:
   serviceName: elasticsearch-logging
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       k8s-app: elasticsearch-logging
