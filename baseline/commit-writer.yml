@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Write to file baseline_image
+      lineinfile:
+        path: ./baseline
+        create: yes
+        state: present
+        insertbefore: BOF
+        line:  '{{date}},{{repo}},{{branch}},{{commit}}'
