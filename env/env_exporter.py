@@ -52,9 +52,9 @@ def getJiva(filename, opt):
             jivaDetails = ['jiva', commit[1].rstrip('\n')]
             file.close() 
             if opt == 'jcontroller':
-                return 'openebs/'+'jiva'+':'+jivaDetails[1]
+                return 'atulabhi/'+'jiva'+':'+jivaDetails[1]
             elif opt == 'jreplica':
-                return 'openebs/'+'jiva'+':'+jivaDetails[1]
+                return 'atulabhi/'+'jiva'+':'+jivaDetails[1]
     file.close() 
     return None
 
