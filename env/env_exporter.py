@@ -1,4 +1,4 @@
-# 
+#
 # Copyright 2018 The OpenEBS Authors
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 # Info:
 # This Python script can be used to generate the image name with tag
 # HOW TO EXPORT:
-# $ export OPENEBS_IO_JIVA_CONTROLLER_IMAGE=$(eval python env_exporter.py -o jcontroller)
+# $ export OPENEBS_IO_JIVA_CONTROLLER_IMAGE=$(eval python env_exporter.py -f ../baseline/baseline -o jcontroller)
 # -o, --option: jcontroller, jreplica, mapi and iovolume
 
 import argparse
@@ -85,8 +85,8 @@ def get_docker_image_name_with_tag(filename, option):
     return None
 
 
-def run(option):
-    filename = '../baseline/baseline'
+def run(filename, option):
+    # filename = '../baseline/baseline'
     data = get_docker_image_name_with_tag(filename, option)
     if data:
         print(data)
@@ -96,6 +96,7 @@ def run(option):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='returns')
+    parser.add_argument('-fp', '--filename', help='Enter the name of file(with path)', required=True)
     parser.add_argument('-o', '--option', help='Enter the repo name', required=True)
     args = vars(parser.parse_args())
-    run(args['option'])
+    run(args['filename'], args['option'])
