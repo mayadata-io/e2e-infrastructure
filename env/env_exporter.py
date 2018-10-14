@@ -86,7 +86,6 @@ def get_docker_image_name_with_tag(filename, option):
 
 
 def run(filename, option):
-    # filename = '../baseline/baseline'
     data = get_docker_image_name_with_tag(filename, option)
     if data:
         print(data)
