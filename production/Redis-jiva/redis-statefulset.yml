@@ -75,7 +75,7 @@ spec:
   - metadata:
       name: datadir
       annotations:
-        volume.beta.kubernetes.io/storage-class: openebs-standard
+        volume.beta.kubernetes.io/storage-class: redis-sc
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
