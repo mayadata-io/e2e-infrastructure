@@ -1,0 +1,13 @@
+stages:
+  - build
+ 
+
+build:
+   stage: build
+#   image: harshvkarn/dind:v6
+   before_script:
+     - export COMMIT=${CI_COMMIT_SHA:0:8}
+   script: 
+    - echo "Building-Jiva"
+    - echo $COMMIT
+
