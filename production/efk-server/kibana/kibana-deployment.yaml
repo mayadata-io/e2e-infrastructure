@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: kibana-logging
-        image: shiveshabhishek/kibana:v1
+        image: slalwani97/kibana-e2e:v1
         resources:
           # need more cpu upon initialization, therefore burstable class
           limits:
