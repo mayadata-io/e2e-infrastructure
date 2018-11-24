@@ -62,6 +62,8 @@ spec:
       labels:
         k8s-app: elasticsearch-logging
     spec:
+      securityContext:
+        fsGroup: 1000 # fsGroup is used for elasticsearch container
       serviceAccountName: elasticsearch-logging
       # Elasticsearch requires vm.max_map_count to be at least 262144.
       # If your OS already sets up this number to a higher value, feel free
@@ -71,11 +73,13 @@ spec:
         command: ["/sbin/sysctl", "-w", "vm.max_map_count=262144"]
         name: elasticsearch-logging-init
         securityContext:
-          privileged: true
+          privileged: true # sysctl command needs root permission to change kernel config
       containers:
       - image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.3.2
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         name: elasticsearch-logging
+        securityContext:
+          runAsUser: 1000   # elasticsearch container runs with elasticsearch user (1000:1000)
         resources:
           # need more cpu upon initialization, therefore burstable class
           limits:
@@ -104,10 +108,10 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: elasticsearch-logging
-      annotations:
-        volume.beta.kubernetes.io/storage-class: "fast"
     spec:
-      accessModes: [ ReadWriteOnce ]
+      storageClassName: openebs-cstor-ssd
+      accessModes:
+      - ReadWriteOnce
       resources:
         requests:
-          storage: 10Gi
+          storage: 50G
