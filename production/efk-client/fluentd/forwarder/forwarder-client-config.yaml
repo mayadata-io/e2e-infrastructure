@@ -86,7 +86,7 @@ data:
         heartbeat_type tcp
         buffer_chunk_limit 2M
         buffer_queue_limit 32
-        flush_interval 4s
+        flush_interval 5s
         max_retry_wait 15
         disable_retry_limit
         num_threads 8

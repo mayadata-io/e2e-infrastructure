@@ -40,7 +40,7 @@ data:
           flush_mode interval
           retry_type exponential_backoff
           flush_thread_count 3
-          flush_interval 4s
+          flush_interval 5s
           retry_forever
           retry_max_interval 30
           chunk_limit_size 2M
