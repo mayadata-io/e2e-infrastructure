@@ -55,7 +55,7 @@ spec:
       volumes:
         - name: grafana-store
           persistentVolumeClaim:
-            claimName: grafana-claim      
+            claimName: grafana-cstor-claim      
         - name: config-volume
           configMap:
             name: grafana-cfgmap
@@ -64,10 +64,10 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: grafana-claim
+  name: grafana-cstor-claim
   namespace: grafana-cstor
 spec:
-  storageClassName: openebs-cstor-sparse 
+  storageClassName: openebs-cstor-standard 
   accessModes:
     - ReadWriteOnce
   resources:

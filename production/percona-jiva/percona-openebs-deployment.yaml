@@ -5,7 +5,7 @@ metadata:
   name: percona
   namespace: percona-jiva	
   labels:
-    name: percona
+    app: percona
     type: workload
 spec:
   replicas: 1
@@ -16,6 +16,7 @@ spec:
     metadata:
       labels: 
         name: percona
+        app: percona
         type: workload
     spec:
       tolerations:
@@ -40,19 +41,19 @@ spec:
               name: percona
           volumeMounts:
             - mountPath: /var/lib/mysql
-              name: demo-vol1
+              name: percona-jiva-volume
       volumes:
-        - name: demo-vol1
+        - name: percona-jiva-volume
           persistentVolumeClaim:
-            claimName: demo-vol1-claim
+            claimName: percona-jiva-claim
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: demo-vol1-claim
+  name: percona-jiva-claim
   namespace: percona-jiva
 spec:
-  storageClassName: openebs-percona 
+  storageClassName: openebs-jiva-default 
   accessModes:
     - ReadWriteOnce
   resources:

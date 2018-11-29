@@ -19,15 +19,18 @@ kind: StatefulSet
 metadata:
  name: mongo
  namespace: mongo-jiva
+ labels:
+  app: mongo
 spec:
  serviceName: mongo
- replicas: 3
+ replicas: 2
  template:
    metadata:
      labels:
        role: mongo
        environment: test
        type: workload
+       app: mongo
    spec:
      terminationGracePeriodSeconds: 10
      containers:
@@ -55,9 +58,9 @@ spec:
      name: mongo-persistent-storage
      namespace: mongo-jiva
    spec:
-     storageClassName: openebs-mongodb
+     storageClassName: openebs-jiva-default
      accessModes:
        - ReadWriteOnce
      resources:
        requests:
-         storage: 5G
+         storage: 10G

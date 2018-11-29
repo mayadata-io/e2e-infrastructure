@@ -5,7 +5,7 @@ metadata:
   name: percona
   namespace: percona-cstor	
   labels:
-    name: percona
+    app: percona
     type: workload
 spec:
   replicas: 1
@@ -17,6 +17,7 @@ spec:
       labels: 
         name: percona
         type: workload
+        app: percona
     spec:
       tolerations:
       - key: "ak"
@@ -40,24 +41,24 @@ spec:
               name: percona
           volumeMounts:
             - mountPath: /var/lib/mysql
-              name: demo-vol1
+              name: percona-cstor-volume
       volumes:
-        - name: demo-vol1
+        - name: percona-cstor-volume
           persistentVolumeClaim:
-            claimName: demo-vol1-claim
+            claimName: percona-cstor-claim
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: demo-vol1-claim
+  name: percona-cstor-claim
   namespace: percona-cstor
 spec:
-  storageClassName: openebs-cstor-sparse 
+  storageClassName: openebs-cstor-ssd 
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 5G
+      storage: 30G
 ---
 apiVersion: v1
 kind: Service

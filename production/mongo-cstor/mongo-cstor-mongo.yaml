@@ -19,6 +19,8 @@ kind: StatefulSet
 metadata:
  name: mongo
  namespace: mongo-cstor
+ labels:
+  app: mongo
 spec:
  serviceName: mongo
  replicas: 3
@@ -28,6 +30,7 @@ spec:
        role: mongo
        environment: test
        type: workload
+       app: mongo
    spec:
      terminationGracePeriodSeconds: 10
      containers:
@@ -43,7 +46,7 @@ spec:
          ports:
            - containerPort: 27017
          volumeMounts:
-           - name: mongo-persistent-storage
+           - name: mongo-cstor-persistent-storage
              mountPath: /data/db
        - name: mongo-sidecar
          image: cvallance/mongo-k8s-sidecar
@@ -52,12 +55,12 @@ spec:
              value: "role=mongo,environment=test"
  volumeClaimTemplates:
  - metadata:
-     name: mongo-persistent-storage
+     name: mongo-cstor-persistent-storage
      namespace: mongo-cstor
    spec:
-     storageClassName: openebs-cstor-sparse
+     storageClassName: ci-ssd-pool
      accessModes:
        - ReadWriteOnce
      resources:
        requests:
-         storage: 10G
+         storage: 30G

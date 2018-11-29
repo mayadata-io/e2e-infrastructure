@@ -1,0 +1,30 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations:
+    cas.openebs.io/config: |
+      - name: StoragePoolClaim
+        value: "ci-ssd-pool"
+    openebs.io/cas-type: cstor
+  name: ci-ssd-pool
+provisioner: openebs.io/provisioner-iscsi
+---
+apiVersion: openebs.io/v1alpha1
+kind: StoragePoolClaim
+metadata:
+  name: ci-ssd-pool
+spec:
+  disks:
+    diskList:
+    - disk-7281faa86e77ec64e037e40fa041c038
+    - disk-250ce9e2a00ef095ed7b16b24865b619
+    - disk-2e9e988e6e33e3405242e57ea54b6355
+    - disk-a9bda2bdf6c36137c167860e7ff09804
+    - disk-15af5db9da36999f34bcb8466bc77135
+    - disk-c0e6762a6f552f7a3198df6c4496d315
+  maxPools: 3
+  name: ci-ssd-pool
+  poolSpec:
+    poolType: striped
+  type: disk

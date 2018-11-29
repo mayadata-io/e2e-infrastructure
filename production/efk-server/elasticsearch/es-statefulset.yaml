@@ -51,6 +51,7 @@ metadata:
   namespace: logging
   labels:
     k8s-app: elasticsearch-logging
+    type: workload
 spec:
   serviceName: elasticsearch-logging
   replicas: 1
@@ -61,6 +62,7 @@ spec:
     metadata:
       labels:
         k8s-app: elasticsearch-logging
+        type: workload
     spec:
       securityContext:
         fsGroup: 1000 # fsGroup is used for elasticsearch container
@@ -109,7 +111,7 @@ spec:
   - metadata:
       name: elasticsearch-logging
     spec:
-      storageClassName: openebs-cstor-ssd
+      storageClassName: ci-ssd-pool
       accessModes:
       - ReadWriteOnce
       resources:

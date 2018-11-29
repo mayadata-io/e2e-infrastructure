@@ -1,0 +1,24 @@
+{
+        "kind": "Service",
+        "apiVersion": "v1",
+        "metadata": {
+            "name": "postgresql-replica",
+            "namespace": "postgresql-jiva",
+            "labels": {
+                "name": "postgresql-replica"
+            }
+        },
+        "spec": {
+            "ports": [{
+                "protocol": "TCP",
+                "port": 5432,
+                "targetPort": 5432,
+                "nodePort": 0
+            }],
+            "selector": {
+                "name": "postgresql-replica"
+            },
+            "type": "ClusterIP",
+            "sessionAffinity": "None"
+        }
+}

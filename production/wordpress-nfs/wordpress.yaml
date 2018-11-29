@@ -1,3 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress-load
+  namespace: wordpress-nfs
+  labels:
+    app: wordpress-load
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: wordpress
+    tier: frontend
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: wordpress
+  name: wordpress
+  namespace: wordpress-nfs
+spec:
+  type: NodePort
+  ports:
+  - name: wordpress
+    port: 80
+    protocol: TCP
+  selector:
+     app: wordpress
+     tier: frontend    
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wp-pv-claim
+  namespace: wordpress-nfs
+  labels:
+    app: wordpress
+spec:
+  storageClassName: openebs-nfs
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5G
 ---
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment
@@ -6,13 +52,12 @@ metadata:
   namespace: wordpress-nfs
   labels:
     app: wordpress
-    type: workload
 spec:
   selector:
     matchLabels:
       app: wordpress
       tier: frontend
-  replicas: 3
+  replicas: 3    
   strategy:
     type: Recreate
   template:
@@ -20,7 +65,6 @@ spec:
       labels:
         app: wordpress
         tier: frontend
-        type: workload
     spec:
       containers:
       - image: wordpress:4.8-apache
@@ -42,34 +86,4 @@ spec:
       volumes:
       - name: wordpress-persistent-storage
         persistentVolumeClaim:
-          claimName: openebs-nfs
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: openebs-nfs
-  namespace: wordpress-nfs
-  annotations:
-    volume.beta.kubernetes.io/storage-class: "openebs-nfs"
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 5G
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: wordpress
-  namespace: wordpress-nfs
-  labels:
-    app: wordpress
-spec:
-  type: NodePort
-  ports:
-  - name: wordpress
-    port: 80
-    protocol: TCP
-  selector:
-    app: wordpress      
+          claimName: wp-pv-claim

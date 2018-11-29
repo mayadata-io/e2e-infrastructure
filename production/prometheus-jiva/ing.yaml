@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
- name: prometheus-frontend-ingress
+ name: prometheus-jiva-ingress
  namespace: prometheus-jiva
  annotations:
   nginx.ingress.kubernetes.io/rewrite-target: /
@@ -18,9 +18,5 @@ spec:
      paths:
      - path: /
        backend:
-         serviceName: prometheus-jiva-client-service
-         servicePort: 80
-     - path: /api/
-       backend:
-         serviceName: prometheus-jiva-backend-service
-         servicePort: 3000
+         serviceName: prometheus-jiva-service
+         servicePort: 32517

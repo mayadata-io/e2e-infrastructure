@@ -20,19 +20,19 @@ metadata:
   name: wordpress-mysql
   namespace: wordpress-nfs
   labels:
-    app: wordpress
+    app: wordpress-sql
     type: workload
 spec:
   selector:
     matchLabels:
-      app: wordpress
+      app: wordpress-sql
       tier: mysql
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: wordpress
+        app: wordpress-sql
         tier: mysql
         type: workload
     spec:
@@ -54,12 +54,12 @@ spec:
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
-          claimName: sql-pvc
+          claimName: wordpress-sql-pvc
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: sql-pvc
+  name: wordpress-sql-pvc
   namespace: wordpress-nfs
   labels:
     app: wordpress
@@ -69,4 +69,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
+      storage: 5G

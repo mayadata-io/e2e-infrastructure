@@ -1,8 +1,8 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
- name: grafana-cstor-ingress
- namespace: grafana-cstor
+ name: openebs-ingress
+ namespace: openebs
  annotations:
   nginx.ingress.kubernetes.io/rewrite-target: /
   kubernetes.io/tls-acme: "true"
@@ -10,13 +10,13 @@ metadata:
 spec:
  tls:
  - hosts:
-   - grafana-dashboard.openebs.ci
-   secretName: grafana-ingress
+   - prometheus-openebs-dashboard.openebs.ci
+   secretName: openebs-ingress
  rules:
- - host: grafana-dashboard.openebs.ci
+ - host: prometheus-openebs-dashboard.openebs.ci
    http:
      paths:
      - path: /
        backend:
-         serviceName: grafana-service
-         servicePort: 3000                  
+         serviceName: openebs-prometheus-service
+         servicePort: 9090
