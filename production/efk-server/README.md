@@ -2,8 +2,10 @@ This folder contains the yaml files for fluentd(forwarder and aggregator), elast
 
 ---
 ### Setting Up Elasticsearch and Kibana :
+First, we need to create a namespace called *logging* :
+`kubectl create ns logging`
 
-First, we need to deploy **Elasticsearch** statefulset:
+Now, we need to deploy **Elasticsearch** statefulset:
 `kubectl apply -f https://raw.githubusercontent.com/openebs/e2e-infrastructure/master/production/efk-server/elasticsearch/es-statefulset.yaml`
 
 Then the Elasticsearch service:
