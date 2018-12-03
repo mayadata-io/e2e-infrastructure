@@ -64,7 +64,7 @@
             }],
             "volumeMounts": [
               {
-                "name": "postgresql-cstor-pgdata",
+                "name": "postgresql-cstor",
                 "mountPath": "/pgdata",
 		"readOnly": false
               }
@@ -76,7 +76,7 @@
     "volumeClaimTemplates": [
       {
         "metadata": {
-          "name": "postgresql-cstor-pgdata"
+          "name": "postgresql-cstor"
         },
         "spec": {
           "accessModes": [
@@ -85,7 +85,7 @@
 	  "storageClassName": "ci-ssd-pool",
           "resources": {
             "requests": {
-              "storage": "5G"
+              "storage": "20G"
             }
           }
         }
