@@ -1,0 +1,74 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: percona
+  namespace: percona-cstor	
+  labels:
+    app: percona
+    type: workload
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      name: percona 
+  template: 
+    metadata:
+      labels: 
+        name: percona
+        type: workload
+    spec:
+      tolerations:
+      - key: "ak"
+        value: "av"
+        operator: "Equal"
+        effect: "NoSchedule"
+      containers:
+        - resources:
+            limits:
+              cpu: 0.5
+          name: percona
+          image: percona:latest
+          args:
+            - "--ignore-db-dir"
+            - "lost+found"
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: k8sDem0
+          ports:
+            - containerPort: 3306
+              name: percona
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: percona-cstor-volume
+      volumes:
+        - name: percona-cstor-volume
+          persistentVolumeClaim:
+            claimName: percona-cstor-claim
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: percona-cstor-claim
+  namespace: percona-cstor
+spec:
+  storageClassName: cstor-disk-standard 
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30G
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: percona-mysql
+  namespace: percona-cstor
+  labels:
+    name: percona-mysql
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:
+      name: percona
