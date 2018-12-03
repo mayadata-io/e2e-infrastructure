@@ -62,7 +62,6 @@ spec:
         k8s-app: fluentd-forwarder
         kubernetes.io/cluster-service: "true"
     spec:
-      priorityClassName: system-node-critical
       serviceAccountName: fluentd-forwarder
       tolerations:
       - key: node-role.kubernetes.io/master
