@@ -82,10 +82,10 @@ spec:
           runAsUser: 1000   # elasticsearch container runs with elasticsearch user (1000:1000)
         resources:
           # need more cpu upon initialization, therefore burstable class
-          limits:
-            cpu: 1000m
+          #limits:
+          #cpu: 1000m
           requests:
-            cpu: 100m
+            cpu: "1"
         ports:
         - containerPort: 9200
           name: db
