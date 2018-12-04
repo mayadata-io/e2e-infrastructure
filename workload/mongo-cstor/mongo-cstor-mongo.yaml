@@ -1,0 +1,70 @@
+# Headless service for stable DNS entries of StatefulSet members.
+apiVersion: v1
+kind: Service
+metadata:
+ name: mongo
+ namespace: mongo-cstor
+ labels:
+   name: mongo
+spec:
+ ports:
+ - port: 27017
+   targetPort: 27017
+ clusterIP: None
+ selector:
+   role: mongo
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+ name: mongo
+ namespace: mongo-cstor
+ labels:
+  app: mongo
+spec:
+ serviceName: mongo
+ replicas: 2
+ template:
+   metadata:
+     labels:
+       role: mongo
+       environment: test
+       type: workload
+       app: mongo
+   spec:
+     terminationGracePeriodSeconds: 10
+     containers:
+       - name: mongo
+         image: mongo
+         command:
+           - mongod
+           - "--replSet"
+           - rs0
+           - "--smallfiles"
+           - "--noprealloc"
+           - "--bind_ip_all"
+         ports:
+           - containerPort: 27017
+         volumeMounts:
+           - name: mongo-cstor-persistent-storage
+             mountPath: /data/db
+       - name: mongo-sidecar
+         image: cvallance/mongo-k8s-sidecar
+         env:
+           - name: MONGO_SIDECAR_POD_LABELS
+             value: "role=mongo,environment=test"
+     volumes:
+     - name: mongo-cstor-persistent-storage
+       persistentVolumeClaim:
+         claimName: mongo-cstor-persistent-storage              
+ volumeClaimTemplates:
+ - metadata:
+     name: mongo-cstor-persistent-storage
+     namespace: mongo-cstor
+   spec:
+     storageClassName: ci-ssd-pool
+     accessModes:
+       - ReadWriteOnce
+     resources:
+       requests:
+         storage: 30G
