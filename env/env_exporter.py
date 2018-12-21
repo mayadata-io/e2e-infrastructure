@@ -73,7 +73,7 @@ def get_istgt_detail(commit, option, *args, **kwargs):
     '''
     istgtDetails = ['istgt', commit.rstrip('\n')]
     if option == 'target':
-        return 'openebs/cstor-pool:'+istgtDetails[1]
+        return 'openebs/cstor-istgt:'+istgtDetails[1]
     return None
 
 def get_ndm_detail(commit, option, *args, **kwargs):
