@@ -1,0 +1,16 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations:
+    cas.openebs.io/config: |
+      - name: ReplicaCount
+        value: "3"
+      - name: PVCServiceAccountName
+        value: "percona-cstor-user-service-account"
+      - name: FSType
+        value: "ext4"
+      - name: StoragePoolClaim
+        value: "ci-ssd-pool"          
+    openebs.io/cas-type: cstor
+  name: percona-cstor-sd-sc
+provisioner: openebs.io/provisioner-iscsi

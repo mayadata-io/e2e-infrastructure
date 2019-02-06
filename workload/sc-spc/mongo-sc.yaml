@@ -1,0 +1,12 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: openebs-mongodb
+  annotations:
+    cas.openebs.io/config: |
+      - name: FSType
+        value: "xfs"
+      - name: StoragePoolClaim
+        value: "ci-ssd-pool"  
+    openebs.io/cas-type: cstor    
+provisioner: openebs.io/provisioner-iscsi

@@ -62,7 +62,7 @@ spec:
      name: mongo-persistent-storage
      namespace: mongo-jiva
    spec:
-     storageClassName: openebs-jiva-default
+     storageClassName: mongodb-jiva
      accessModes:
        - ReadWriteOnce
      resources:

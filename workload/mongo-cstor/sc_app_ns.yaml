@@ -1,0 +1,14 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations:
+    cas.openebs.io/config: |
+      - name: ReplicaCount
+        value: "3"
+      - name: FSType
+        value: "xfs"
+      - name: StoragePoolClaim
+        value: "cstor-disk-standard"          
+    openebs.io/cas-type: cstor
+  name: mongo-cstor-sd-sc
+provisioner: openebs.io/provisioner-iscsi

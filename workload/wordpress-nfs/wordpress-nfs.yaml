@@ -1,0 +1,324 @@
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: openebs-nfs-provisioner
+spec:
+  fsGroup:
+    rule: RunAsAny
+  allowedCapabilities:
+  - DAC_READ_SEARCH
+  - SYS_RESOURCE
+  runAsUser:
+    rule: RunAsAny
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  volumes:
+  - configMap
+  - downwardAPI
+  - emptyDir
+  - persistentVolumeClaim
+  - secret
+  - hostPath
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: openebs-nfs-provisioner-runner
+rules:
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "update"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "update", "patch"]
+  - apiGroups: [""]
+    resources: ["services", "endpoints"]
+    verbs: ["get"]
+  - apiGroups: ["extensions"]
+    resources: ["podsecuritypolicies"]
+    resourceNames: ["nfs-provisioner"]
+    verbs: ["use"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: openebs-run-nfs-provisioner
+subjects:
+  - kind: ServiceAccount
+    name: openebs-nfs-provisioner
+     # replace with namespace where provisioner is deployed
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: openebs-nfs-provisioner-runner
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: openebs-leader-locking-nfs-provisioner
+rules:
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: openebs-leader-locking-nfs-provisioner
+subjects:
+  - kind: ServiceAccount
+    name: openebs-nfs-provisioner
+    # replace with namespace where provisioner is deployed
+roleRef:
+  kind: Role
+  name: openebs-leader-locking-nfs-provisioner
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+ name: openebs-nfs-provisioner
+---
+kind: Service
+apiVersion: v1
+metadata:
+ name: openebs-nfs-provisioner
+ labels:
+   app: openebs-nfs-provisioner
+spec:
+ ports:
+   - name: nfs
+     port: 2049
+   - name: mountd
+     port: 20048
+   - name: rpcbind
+     port: 111
+   - name: rpcbind-udp
+     port: 111
+     protocol: UDP
+ selector:
+   app: openebs-nfs-provisioner
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+ name: openebs-nfs-provisioner
+spec:
+ selector:
+   matchLabels:
+     app: openebs-nfs-provisioner
+ replicas: 1
+ strategy:
+   type: Recreate
+ template:
+   metadata:
+     labels:
+       app: openebs-nfs-provisioner
+       type: workload
+   spec:
+     serviceAccount: openebs-nfs-provisioner
+     containers:
+       - name: openebs-nfs-provisioner
+         image: quay.io/kubernetes_incubator/nfs-provisioner:latest
+         ports:
+           - name: nfs
+             containerPort: 2049
+           - name: mountd
+             containerPort: 20048
+           - name: rpcbind
+             containerPort: 111
+           - name: rpcbind-udp
+             containerPort: 111
+             protocol: UDP
+         securityContext:
+           capabilities:
+             add:
+               - DAC_READ_SEARCH
+               - SYS_RESOURCE
+         args:
+           - "-provisioner=openebs.io/nfs"
+         env:
+           - name: POD_IP
+             valueFrom:
+               fieldRef:
+                 fieldPath: status.podIP
+           - name: SERVICE_NAME
+             value: openebs-nfs-provisioner
+           - name: POD_NAMESPACE
+             valueFrom:
+               fieldRef:
+                 fieldPath: metadata.namespace
+         imagePullPolicy: "IfNotPresent"
+         volumeMounts:
+           - name: export-volume
+             mountPath: /export
+     volumes:
+     - name: export-volume
+       persistentVolumeClaim:
+         claimName: openebspvc
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+ name: openebspvc
+spec:
+ storageClassName: openebs-jiva-default
+ accessModes:
+   - ReadWriteOnce
+ resources:
+   requests:
+     storage: "5.5G"
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: openebs-nfs
+provisioner: openebs.io/nfs
+parameters:
+  mountOptions: "vers=4.1"  # TODO: reconcile with StorageClass.mountOptions
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress-mysql
+  labels:
+    app: wordpress
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: wordpress
+    tier: mysql
+  clusterIP: None
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: wordpress-mysql
+  labels:
+    app: wordpress
+spec:
+  selector:
+    matchLabels:
+      app: wordpress
+      tier: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: wordpress
+        tier: mysql
+        type: workload
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: sql-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sql-pvc
+  labels:
+    app: wordpress
+spec:
+  storageClassName: openebs-jiva-default
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: wordpress
+    tier: frontend
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+spec:
+  selector:
+    matchLabels:
+      app: wordpress
+      tier: frontend
+  replicas: 3
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: wordpress
+        tier: frontend
+        type: workload
+    spec:
+      containers:
+      - image: wordpress:4.8-apache
+        name: wordpress
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: wordpress-mysql
+        - name: WORDPRESS_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        ports:
+        - containerPort: 80
+          name: wordpress
+        volumeMounts:
+        - name: wordpress-persistent-storage
+          mountPath: /var/www/html
+      volumes:
+      - name: wordpress-persistent-storage
+        persistentVolumeClaim:
+          claimName: openebs-nfs
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: openebs-nfs
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "openebs-nfs"
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5G

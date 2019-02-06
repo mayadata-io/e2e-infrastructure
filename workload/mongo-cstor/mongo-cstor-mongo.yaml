@@ -62,9 +62,9 @@ spec:
      name: mongo-cstor-persistent-storage
      namespace: mongo-cstor
    spec:
-     storageClassName: ci-ssd-pool
+     storageClassName: mongo-cstor-sd-sc
      accessModes:
        - ReadWriteOnce
      resources:
        requests:
-         storage: 30G
+         storage: 20G
