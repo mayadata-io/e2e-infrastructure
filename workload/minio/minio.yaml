@@ -43,7 +43,7 @@ spec:
         # Mount the volume into the pod
         volumeMounts:
         - name: storage # must match the volume name, above
-          mountPath: "/home/username"
+          mountPath: "/storage"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -58,7 +58,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 10G
+      storage: 10Gi
 ---
 apiVersion: v1
 kind: Service
