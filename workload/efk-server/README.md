@@ -23,7 +23,7 @@ Now, since we have the indices  as *cluster-logs-DATE* , we need to make a curl 
 So, the curl request goes like this:
 
 ```
-curl -XPOST https://e2elogs.openebs.ci/api/saved_objects/index-pattern/8d3d6950-ea9c-11e8-8cff-a161f7929609 -d '
+curl -XPOST https://e2elogs.openebs.ci/api/saved_objects/index-pattern/cluster-logs -d '
    {
      "attributes": {
        "title": "cluster-logs-*",
