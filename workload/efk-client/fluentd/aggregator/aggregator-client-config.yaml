@@ -33,7 +33,7 @@ data:
         scheme https
         ssl_version TLSv1_2
         include_tag_key true
-        hosts https://e2elogs.openebs.ci:443/es/
+        hosts https://es.openebs100.io/
         <buffer>
           @type file
           path /var/log/fluentd-buffers/kubernetes.system.buffer.aggregator
