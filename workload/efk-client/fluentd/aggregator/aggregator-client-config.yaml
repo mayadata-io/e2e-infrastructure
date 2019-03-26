@@ -28,6 +28,9 @@ data:
         @type elasticsearch
         logstash_format true
         include_timestamp true
+        unrecoverable_error_types ["out_of_memory_error"]
+        # this indicates that the plugin should reset connection on any error
+        reconnect_on_error true
         logstash_prefix cluster-logs
         # Important (required to connect with elasticsearch with https request)
         scheme https
