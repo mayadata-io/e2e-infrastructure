@@ -60,7 +60,7 @@ def get_cstor_detail(commit, option, *args, **kwargs):
     If the option doesn't belongs to Cstor it will return None
     args and kwargs can be used for passing additional variable and futher customizing the function
     '''
-    cstorDetails = ['zfs', commit.rstrip('\n')]
+    cstorDetails = ['cstor', commit.rstrip('\n')]
     if option == 'cstorpool':
         return 'openebs/cstor-pool:'+cstorDetails[1]
     return None
@@ -107,7 +107,7 @@ def get_docker_image_name_with_tag(filename, option):
     storage_eng_detail_map = {
         'maya': get_maya_detail,
         'jiva': get_jiva_detail,
-        'zfs': get_cstor_detail,
+        'cstor': get_cstor_detail,
         'istgt': get_istgt_detail,
         'node-disk-manager': get_ndm_detail,
         'external-storage' : get_es_detail
