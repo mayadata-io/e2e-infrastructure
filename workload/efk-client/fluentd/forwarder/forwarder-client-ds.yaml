@@ -69,6 +69,8 @@ spec:
       containers:
       - name: fluentd-forwarder
         image: k8s.gcr.io/fluentd-elasticsearch:v2.2.0
+        securityContext:
+          privileged: true
         env:
         - name: FLUENTD_CONFIG
           value: fluentd-forwarder.conf
