@@ -50,6 +50,18 @@
          args:
            executable: /bin/bash
 
+       - name: Replace the user in Fluentd aggregator configmap yaml
+         replace:
+           path: "{{ result_kube_home.stdout }}/{{ agg_cnfg_yaml_alias }}"
+           regexp: 'user e_user'
+           replace: 'user "{{ e_user }}" '
+
+       - name: Replace the password in Fluentd aggregator configmap yaml
+         replace:
+           path: "{{ result_kube_home.stdout }}/{{ agg_cnfg_yaml_alias }}"
+           regexp: 'password e_password'
+           replace: 'password "{{ e_password }}"'
+
        - name: Applying Fluentd aggregator configmap
          shell: source ~/.profile; kubectl apply -f "{{ result_kube_home.stdout }}/{{ agg_cnfg_yaml_alias }}"
          args:
