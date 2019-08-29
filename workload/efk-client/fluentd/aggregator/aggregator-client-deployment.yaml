@@ -63,7 +63,7 @@ spec:
     spec:
       containers:
       - name: fluentd-aggregator
-        image: k8s.gcr.io/fluentd-elasticsearch:v2.2.0
+        image: quay.io/fluentd_elasticsearch/fluentd:v2.7.0
         imagePullPolicy: IfNotPresent
         resources:
           limits:

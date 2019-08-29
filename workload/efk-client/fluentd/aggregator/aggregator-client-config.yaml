@@ -33,10 +33,13 @@ data:
         reconnect_on_error true
         logstash_prefix cluster-logs
         # Important (required to connect with elasticsearch with https request)
+        ssl_verify false
         scheme https
         ssl_version TLSv1_2
         include_tag_key true
-        hosts https://es.openebs100.io/
+        hosts https://eck.openebs100.io:5601/
+        user e_user
+        password e_password
         <buffer>
           @type file
           path /var/log/fluentd-buffers/kubernetes.system.buffer.aggregator
