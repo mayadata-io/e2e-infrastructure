@@ -3,6 +3,7 @@ import yaml
 from pprint import pprint
 import os
 
+
 def write_file(path, content):
     try:
         file = open(path, "w+")
@@ -12,6 +13,7 @@ def write_file(path, content):
         print("File operation failed\nError: %s" % e)
         return "", -1
     return path, 0
+
 
 def get_file_data(path):
     try:
@@ -23,6 +25,7 @@ def get_file_data(path):
         exit(-1)
     return data
 
+
 def parse_yaml(content):
     try:
         r = yaml.load(content)
@@ -31,18 +34,26 @@ def parse_yaml(content):
         exit(-1)
     return r
 
+
 def main():
-    parser = argparse.ArgumentParser(description='cli tool to replace environment variable')
-    parser.add_argument('-f', '--filename', help = 'filename to be parsed', required = True)
-    args=vars(parser.parse_args())
+    parser = argparse.ArgumentParser(
+        description='cli tool to replace environment variable'
+    )
+    parser.add_argument(
+        '-f', '--filename', help='filename to be parsed', required=True
+    )
+    args = vars(parser.parse_args())
     yaml_info = parse_yaml(get_file_data(args['filename']))
     for container in yaml_info['spec']['template']['spec']['containers']:
         for env in container['env']:
             if os.getenv(env['name']) is not None:
                 env['value'] = os.getenv(env['name'])
-    _, err = write_file(args['filename'], yaml.dump(yaml_info, default_flow_style=False))
+    _, err = write_file(
+        args['filename'], yaml.dump(yaml_info, default_flow_style=False)
+    )
     if err == -1:
         exit(err)
+
 
 if __name__ == "__main__":
     main()
